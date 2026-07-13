@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BuildCV.ai - Premium Resume Studio</title>
+    <style>
+        :root {
+            /* Sleek Dark Dashboard Theme */
+            --slate-50: #f8fafc;
+            --slate-100: #f1f5f9;
+            --slate-300: #cbd5e1;
+            --slate-400: #94a3b8;
+            --slate-700: #334155;
+            --slate-800: #1e293b;
+            --slate-900: #0f172a;
+            --slate-950: #020617;
+            
+            /* Clean Accents */
+            --indigo-600: #4f46e5;
+            --indigo-500: #6366f1;
+            --emerald-600: #059669;
+            --rose-600: #e11d48;
+            
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body { 
+            font-family: 'Inter', system-ui, -apple-system, sans-serif; 
+            background-color: var(--slate-950); 
+            color: var(--slate-50); 
+            margin: 0; 
+            padding: 0; 
+            display: flex; 
+            height: 100vh; 
+            overflow: hidden; 
+        }
+
+        /* Master Architecture Split Pane */
+        .left-pane { 
+            width: 45%; 
+            background: linear-gradient(145deg, var(--slate-900), var(--slate-950)); 
+            border-right: 1px solid var(--slate-800); 
+            padding: 30px; 
+            box-sizing: border-box; 
+            overflow-y: auto; 
+            height: 100vh; 
+        }
+        
+        .right-pane { 
+            width: 55%; 
+            background: radial-gradient(circle at top, var(--slate-900), var(--slate-950)); 
+            padding: 30px; 
+            box-sizing: border-box; 
+            overflow-y: auto; 
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: flex-start; 
+        }
+
+        /* Top Action Bar Navigation */
+        .top-actions { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            background: rgba(30, 41, 59, 0.4); 
+            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px);
+            padding: 12px 20px; 
+            border-radius: var(--radius-lg); 
+            margin-bottom: 30px; 
+            border: 1px solid rgba(255, 255, 255, 0.05); 
+        }
+        
+        .btn-stack { display: flex; gap: 10px; }
+        .btn { 
+            padding: 8px 16px; 
+            font-size: 0.8rem; 
+            font-weight: 600; 
+            border-radius: var(--radius-md); 
+            border: 1px solid transparent;
+            cursor: pointer; 
+            color: white; 
+            transition: var(--transition);
+        }
+        .btn-primary { background: var(--indigo-600); box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3); } 
+        .btn-primary:hover { background: var(--indigo-500); transform: translateY(-1px); }
+        .btn-danger { background: rgba(225, 29, 72, 0.1); border-color: rgba(225, 29, 72, 0.2); color: #fda4af; } 
+        .btn-danger:hover { background: var(--rose-600); color: white; }
+
+        /* Typography & Functional Control Blocks */
+        h2 { font-size: 1rem; font-weight: 700; letter-spacing: 1px; color: var(--slate-100); text-transform: uppercase; margin-top: 0; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+        h4 { font-size: 0.75rem; font-weight: 700; color: var(--indigo-500); text-transform: uppercase; letter-spacing: 1.5px; margin-top: 25px; margin-bottom: 15px; }
+        .preview-heading { align-self: flex-start; margin-left: 5%; margin-bottom: 15px; font-weight: 500; color: #94a3b8; }
+        
+        .row-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 5px; }
+        .full-width { grid-column: span 2; }
+        .field-group { display: flex; flex-direction: column; }
+        
+        label { font-size: 0.65rem; font-weight: 700; color: var(--slate-400); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+        input, textarea, select { 
+            width: 100%; 
+            padding: 10px 14px; 
+            border: 1px solid var(--slate-800); 
+            background: rgba(15, 23, 42, 0.6); 
+            color: white; 
+            border-radius: var(--radius-md); 
+            font-size: 0.85rem; 
+            box-sizing: border-box; 
+            margin-bottom: 12px; 
+            transition: var(--transition);
+        }
+        input:focus, textarea:focus, select:focus { 
+            outline: none; 
+            border-color: var(--indigo-500); 
+            background: var(--slate-900);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        }
+        textarea { height: 90px; resize: vertical; line-height: 1.5; }
+        
+        /* Aesthetic Color Wheel Wrapper */
+        .color-picker-wrapper { display: flex; align-items: center; gap: 12px; background: rgba(15, 23, 42, 0.6); padding: 8px 12px; border: 1px solid var(--slate-800); border-radius: var(--radius-md); }
+        .color-input { width: 32px; height: 32px; padding: 0; border: none; border-radius: 50%; background: transparent; cursor: pointer; margin-bottom: 0; }
+        .color-input::-webkit-color-swatch-wrapper { padding: 0; }
+        .color-input::-webkit-color-swatch { border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 50%; }
+        #colorHexText { font-size: 0.8rem; font-weight: 600; color: var(--slate-400); }
+        .section-divider { height: 1px; background: var(--slate-800); margin: 25px 0; }
+
+        /* --- DYNAMIC RESUME TEMPLATE DESIGN MODULES --- */
+        .preview-wrapper { width: 100%; display: flex; justify-content: center; transform-origin: top center; transform: scale(0.9); transition: var(--transition); }
+        .resume-sheet { 
+            width: 100%; 
+            max-width: 650px; 
+            background: white; 
+            min-height: 842px; 
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); 
+            padding: 45px; 
+            box-sizing: border-box; 
+            color: #1e293b; 
+            line-height: 1.5; 
+            margin-bottom: 40px; 
+            transition: var(--transition);
+        }
+        
+        /* Font Typographies */
+        .font-sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important; }
+        .font-serif { font-family: "Georgia", Cambria, "Times New Roman", Times, serif !important; }
+        .font-mono { font-family: "Fira Code", Menlo, Monaco, "Consolas", monospace !important; letter-spacing: -0.4px; }
+
+        /* Architectural Document Framework Class Structuring */
+        .layout-classic .p-header { border-bottom: 2px solid var(--accent-color, #1e3a8a); padding-bottom: 12px; margin-bottom: 20px; }
+        .layout-classic .p-sec-title { border-bottom: 1px solid #e2e8f0; color: var(--accent-color, #1e3a8a); padding-bottom: 4px; }
+        
+        .layout-modern .p-header { border-bottom: none; background: #f8fafc; padding: 20px; border-radius: var(--radius-md); border-left: 4px solid var(--accent-color, #4f46e5); margin-bottom: 25px; }
+        .layout-modern .p-sec-title { border-bottom: none; background: #f1f5f9; padding: 6px 12px; color: var(--accent-color, #4f46e5); border-radius: var(--radius-md); }
+        .layout-modern .p-name { color: var(--accent-color, #4f46e5); }
+        
+        .layout-minimalist .p-header { border-bottom: 1px dashed #e2e8f0; justify-content: center; text-align: center; padding-bottom: 15px; margin-bottom: 20px; }
+        .layout-minimalist .p-header-left, .layout-minimalist .p-header-right { width: 100%; text-align: center; }
+        .layout-minimalist .p-sec-title { border-bottom: 1px dashed var(--accent-color, #1e293b); text-align: center; color: #0f172a; padding-bottom: 4px; }
+
+        /* Text Layer Node Elements */
+        .p-header { display: flex; justify-content: space-between; }
+        .p-header-left { width: 65%; display: flex; flex-direction: column; justify-content: center; }
+        .p-header-right { width: 35%; text-align: right; font-size: 10px; color: #64748b; line-height: 1.5; word-break: break-all; font-weight: 500; }
+        .p-name { font-size: 26px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.5px; line-height: 1.1; margin: 0 0 4px 0; color: #020617; }
+        .p-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 1px; }
+        
+        .p-section { margin-top: 16px; }
+        .p-sec-title { font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; }
+        .p-text { font-size: 10.5px; margin: 0 0 6px 0; text-align: justify; white-space: pre-line; color: #334155; }
+        .top-actions-link { text-decoration: none; color: var(--slate-300); font-weight: 700; font-size: 0.75rem; letter-spacing: 0.5px; }
+        .btn-save { background: var(--emerald-600); box-shadow: 0 4px 12px rgba(5, 150, 105, 0.15); }
+
+        @media print {
+            body { background: white; overflow: visible; }
+            .left-pane, h3, .top-actions { display: none !important; }
+            .right-pane { width: 100%; padding: 0; background: white; overflow: visible; }
+            .preview-wrapper { transform: scale(1); width: 100%; }
+            .resume-sheet { box-shadow: none; padding: 0; margin: 0; width: 100%; color: #000; }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="left-pane">
+    <div class="top-actions">
+        <a href="/" class="top-actions-link">← PORTAL</a>
+        <div class="btn-stack">
+            <button class="btn btn-danger" onclick="clearAllFormFields()">Reset</button>
+            <button class="btn btn-save" onclick="saveCurrentCVToDatabase()">Save</button>
+            <button class="btn btn-primary" onclick="window.print()">Export PDF</button>
+        </div>
+    </div>
+
+
+    <!-- VISUAL DESIGN SECTION -->
+    <h2>🎨 Layout &amp; Typographies</h2>
+    <div class="row-grid">
+        <div class="field-group">
+            <label for="styleSelector">Document Style</label>
+            <select id="styleSelector" onchange="applyVisualCustomizationTheme()">
+                <option value="layout-classic">Classic Executive</option>
+                <option value="layout-modern">Modern Corporate</option>
+                <option value="layout-minimalist">Centered Minimalist</option>
+            </select>
+        </div>
+        <div class="field-group">
+            <label for="fontSelector">Font Pairing</label>
+            <select id="fontSelector" onchange="applyVisualCustomizationTheme()">
+                <option value="font-sans">Clean Sans-Serif</option>
+                <option value="font-serif">Elegant Serif</option>
+                <option value="font-mono">Technical Code</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="row-grid">
+        <div class="field-group full-width">
+            <label for="colorPicker">Theme Color Accent</label>
+            <div class="color-picker-wrapper">
+                <input type="color" id="colorPicker" value="#4f46e5" class="color-input" oninput="applyVisualCustomizationTheme()">
+                <span id="colorHexText">#4F46E5</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="section-divider"></div>
+
+    <!-- RESUME CONTENT SECTIONS -->
+    <h2>📝 Resume Blueprint</h2>
+
+    <h4>Personal Matrix</h4>
+    <div class="row-grid">
+        <div class="field-group">
+            <label for="inName">Full Name</label>
+            <input type="text" id="inName" value="Helen Vance" oninput="renderLiveCanvas()">
+        </div>
+        <div class="field-group">
+            <label for="inTitle">Professional Title</label>
+            <input type="text" id="inTitle" value="Senior Full-Stack Software Engineer" oninput="renderLiveCanvas()">
+        </div>
+    </div>
+
+    <div class="row-grid">
+        <div class="field-group">
+            <label for="inEmail">Email Address</label>
+            <input type="email" id="inEmail" value="helenvance@gmail.com" oninput="renderLiveCanvas()">
+        </div>
+        <div class="field-group">
+            <label for="inPhone">Phone String</label>
+            <input type="text" id="inPhone" value="+1 (555) 019-2834" oninput="renderLiveCanvas()">
+        </div>
+    </div>
+
+    <div class="row-grid">
+        <div class="field-group">
+            <label for="inLocation">Location</label>
+            <input type="text" id="inLocation" value="Bengaluru, India" oninput="renderLiveCanvas()">
+        </div>
+        <div class="field-group">
+            <label for="inLinkedin">LinkedIn URL</label>
+            <input type="text" id="inLinkedin" value="://linkedin.com" oninput="renderLiveCanvas()">
+        </div>
+    </div>
+
+    <div class="row-grid">
+        <div class="field-group full-width">
+            <label for="inGithub">GitHub Portfolio</label>
+            <input type="text" id="inGithub" value="://github.com" oninput="renderLiveCanvas()">
+        </div>
+    </div>
+
+    <h4>Experience &amp; Core Layout Context</h4>
+    <div class="row-grid">
+        <div class="field-group full-width">
+            <label for="inSummary">Executive Summary Statement</label>
+            <textarea id="inSummary" oninput="renderLiveCanvas()">Performance-driven Full-Stack Software Engineer with 4+ years of experience building scalable web architectures and distributed backend systems within India's fast-paced fintech and SaaS sectors. Expert at crafting highly responsive frontend dashboards in React and optimizing complex data management layers using Node.js and MongoDB clusters. Strong advocate for writing clean, modular code and streamlining automated deployment workflows.</textarea>
+        </div>
+    </div>
+
+    <div class="row-grid">
+        <div class="field-group full-width">
+            <label for="inExperience">Employment Chronology Details History</label>
+            <textarea id="inExperience" oninput="renderLiveCanvas()">Senior Software Engineer | Razorpay Technologies (2024 - Present)
+- Led team of 4 developers to build secure transaction management pipelines using Node.js.
+- Reduced database transaction queries latency metrics by 35% via aggregation tuning.
+
+Full-Stack Developer | Zeta Suite India (2022 - 2024)
+- Maintained core user facing dashboards leveraging React and Next.js optimization modules.
+- Formatted connection pooling configurations across localized MySQL and Redis clusters.</textarea>
+        </div>
+    </div>
+
+    <h4>Skillsets &amp; Side Projects</h4>
+    <div class="row-grid">
+        <div class="field-group">
+            <label for="inSkills">Technical Core Competencies</label>
+            <textarea id="inSkills" oninput="renderLiveCanvas()">React, Node.js, Express, Next.js, MongoDB, PostgreSQL, Git, Docker, AWS Cloud Operations</textarea>
+        </div>
+        <div class="field-group">
+            <label for="inProjects">Engineering Portfolio Projects</label>
+            <textarea id="inProjects" oninput="renderLiveCanvas()">- BuildCV.ai: Developed an intelligent, open-source resume creation and tracking dashboard utilizing a Python Flask backend framework paired with robust MySQL relational data storage and real-time canvas scaling engines.</textarea>
+        </div>
+    </div>
+
+    <div class="row-grid">
+        <div class="field-group">
+            <label for="inEducation">Formal Education Background</label>
+            <textarea id="inEducation" oninput="renderLiveCanvas()">B.Tech in Computer Science &amp; Engineering
+Indian Institute of Technology (IIT) Bombay (Graduation: 2022)</textarea>
+        </div>
+        <div class="field-group">
+            <label for="inCertifications">Certifications &amp; Credentials</label>
+            <textarea id="inCertifications" oninput="renderLiveCanvas()">AWS Certified Solutions Architect
+MongoDB Certified Professional Developer</textarea>
+        </div>
+    </div>
+
+    <h4>Extra Curricular Profile Accents</h4>
+    <div class="row-grid">
+        <div class="field-group">
+            <label for="inAssociations">Professional Affiliations</label>
+            <textarea id="inAssociations" oninput="renderLiveCanvas()">Computer Society of India (CSI) Life Member
+IEEE Bangalore Section Associate Partner</textarea>
+        </div>
+        <div class="field-group">
+            <label for="inVolunteer">Volunteer Directives Work</label>
+            <textarea id="inVolunteer" oninput="renderLiveCanvas()">Technical Mentor at local code bootcamps
+Teaching full-stack JavaScript architectures to community students</textarea>
+        </div>
+    </div>
+
+    <div class="row-grid">
+        <div class="field-group">
+            <label for="inLanguages">Languages Spoken</label>
+            <input type="text" id="inLanguages" value="English (Professional Fluency), Malayalam (Native Fluency)" oninput="renderLiveCanvas()">
+        </div>
+        <div class="field-group">
+            <label for="inAwards">Awards Honors Recognitions</label>
+            <input type="text" id="inAwards" value="Winner - National Smart India Hackathon | Selected out of 3,500+ teams" oninput="renderLiveCanvas()">
+        </div>
+    </div>
+</div>
+
+<!-- RIGHT PANE: DOCUMENT VIEW FRAME CANVAS WITH FIXED WRAPPER SCALING -->
+<div class="right-pane">
+    <h3 class="preview-heading">✨ Live Preview Canvas</h3>
+    
+    <div class="preview-wrapper">
+        <div class="resume-sheet" id="printSheet">
+            
+            <!-- Document Structural Profile Header -->
+            <div class="p-header">
+                <div class="p-header-left">
+                    <div class="p-name" id="viewName">HELEN VANCE</div>
+                    <div class="p-title" id="viewTitle">SENIOR FULL-STACK SOFTWARE ENGINEER</div>
+                </div>
+                <div class="p-header-right" id="viewContactBlock">
+                    helenvance@gmail.com<br>
+                    +1 (555) 019-2834<br>
+                    Bengaluru, India<br>
+                    ://linkedin.com<br>
+                    ://github.com
+                </div>
+            </div>
+
+            <!-- 1. SUMMARY -->
+            <div class="p-section" id="secSummary">
+                <div class="p-sec-title">Professional Summary</div>
+                <p class="p-text" id="viewSummary"></p>
+            </div>
+
+            <!-- 2. EXPERIENCE -->
+            <div class="p-section" id="secExperience">
+                <div class="p-sec-title">Experience History</div>
+                <p class="p-text" id="viewExperience"></p>
+            </div>
+
+            <!-- 3. SKILLS -->
+            <div class="p-section" id="secSkills">
+                <div class="p-sec-title">Technical Skills</div>
+                <p class="p-text" id="viewSkills"></p>
+            </div>
+
+            <!-- 4. PROJECTS -->
+            <div class="p-section" id="secProjects">
+                <div class="p-sec-title">Publications &amp; Projects</div>
+                <p class="p-text" id="viewProjects"></p>
+            </div>
+
+            <!-- 5. EDUCATION -->
+            <div class="p-section" id="secEducation">
+                <div class="p-sec-title">Education</div>
+                <p class="p-text" id="viewEducation"></p>
+            </div>
+
+            <!-- 6. CERTIFICATIONS -->
+            <div class="p-section" id="secCertifications">
+                <div class="p-sec-title">Certifications</div>
+                <p class="p-text" id="viewCertifications"></p>
+            </div>
+
+            <!-- 7. ASSOCIATIONS -->
+            <div class="p-section" id="secAssociations">
+                <div class="p-sec-title">Professional Associations</div>
+                <p class="p-text" id="viewAssociations"></p>
+            </div>
+
+            <!-- 8. VOLUNTEER -->
+            <div class="p-section" id="secVolunteer">
+                <div class="p-sec-title">Volunteer Work</div>
+                <p class="p-text" id="viewVolunteer"></p>
+            </div>
+
+            <!-- 9. LANGUAGES -->
+            <div class="p-section" id="secLanguages">
+                <div class="p-sec-title">Languages</div>
+                <p class="p-text" id="viewLanguages"></p>
+            </div>
+
+            <!-- 10. AWARDS -->
+            <div class="p-section" id="secAwards">
+                <div class="p-sec-title">Awards &amp; Honors</div>
+                <p class="p-text" id="viewAwards"></p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function applyVisualCustomizationTheme() {
+        const selectedStyle = document.getElementById('styleSelector').value;
+        const selectedFont = document.getElementById('fontSelector').value;
+        const selectedColor = document.getElementById('colorPicker').value;
+        
+        // Update hex code text indicator string
+        document.getElementById('colorHexText').innerText = selectedColor.toUpperCase();
+        
+        // Apply class transformations onto the live paper canvas element node
+        const sheetElement = document.getElementById('printSheet');
+        sheetElement.className = `resume-sheet ${selectedStyle} ${selectedFont}`;
+        
+        // Inject color properties cleanly using inline CSS variables hooks
+        sheetElement.style.setProperty('--accent-color', selectedColor);
+    }
+
+    function renderLiveCanvas() {
+        // Update Primary Headers Info
+        const nameVal = document.getElementById('inName').value;
+        const titleVal = document.getElementById('inTitle').value;
+        document.getElementById('viewName').innerText = nameVal.toUpperCase();
+        document.getElementById('viewTitle').innerText = titleVal.toUpperCase();
+        
+        // Compile Right Stack Contact Text Metadata Block
+        const email = document.getElementById('inEmail').value;
+        const phone = document.getElementById('inPhone').value;
+        const location = document.getElementById('inLocation').value;
+        const linkedin = document.getElementById('inLinkedin').value;
+        const github = document.getElementById('inGithub').value;
+        
+        document.getElementById('viewContactBlock').innerHTML = `
+            ${email ? `${email}<br>` : ''}
+            ${phone ? `${phone}<br>` : ''}
+            ${location ? `${location}<br>` : ''}
+            ${linkedin ? `${linkedin}<br>` : ''}
+            ${github ? `${github}` : ''}
+        `;
+
+        // Array mapping loop to handle dynamic text blocks visibility
+        const textSections = [
+            { inputId: 'inSummary', viewId: 'viewSummary', secId: 'secSummary' },
+            { inputId: 'inExperience', viewId: 'viewExperience', secId: 'secExperience' },
+            { inputId: 'inSkills', viewId: 'viewSkills', secId: 'secSkills' },
+            { inputId: 'inProjects', viewId: 'viewProjects', secId: 'secProjects' },
+            { inputId: 'inEducation', viewId: 'viewEducation', secId: 'secEducation' },
+            { inputId: 'inCertifications', viewId: 'viewCertifications', secId: 'secCertifications' },
+            { inputId: 'inAssociations', viewId: 'viewAssociations', secId: 'secAssociations' },
+            { inputId: 'inVolunteer', viewId: 'viewVolunteer', secId: 'secVolunteer' },
+            { inputId: 'inLanguages', viewId: 'viewLanguages', secId: 'secLanguages' },
+            { inputId: 'inAwards', viewId: 'viewAwards', secId: 'secAwards' }
+        ];
+
+        textSections.forEach(item => {
+            const rawVal = document.getElementById(item.inputId).value;
+            const viewElement = document.getElementById(item.viewId);
+            const containerSection = document.getElementById(item.secId);
+            
+            if (rawVal.trim() !== "") {
+                viewElement.innerText = rawVal;
+                containerSection.style.display = "block";
+            } else {
+                containerSection.style.display = "none";
+            }
+        });
+    }
+
+    function clearAllFormFields() {
+        const inputs = document.querySelectorAll('.left-pane input, .left-pane textarea');
+        inputs.forEach(field => {
+            if(field.type !== 'color') field.value = '';
+        });
+        renderLiveCanvas();
+    }
+
+    async function saveCurrentCVToDatabase() {
+    const currentLayout = document.getElementById('styleSelector').value;
+    const currentFont = document.getElementById('fontSelector').value;
+    const currentColor = document.getElementById('colorPicker').value;
+
+    const nameVal = document.getElementById('inName').value;
+    const emailVal = document.getElementById('inEmail').value;
+    const summaryVal = document.getElementById('inSummary').value;
+    const experienceVal = document.getElementById('inExperience').value;
+
+    if (!nameVal.trim()) {
+        alert("⚠️ Profile name cannot be left blank before saving.");
+        return;
+    }
+
+    const payload = {
+        name: nameVal,
+        email: emailVal,
+        layout: currentLayout,
+        font: currentFont,
+        color: currentColor,
+        summary_box: summaryVal,
+        experience_box: experienceVal
+    };
+
+    try {
+        const response = await fetch('/api/save-cv', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            alert("🎉 Success! Your resume layout and fields have been securely saved to MySQL.");
+            if (typeof populateSavedTemplatesDropdown === "function") {
+                document.getElementById('templateSelector').innerHTML = '<option value="">-- Choose Profile Map Template --</option>';
+                populateSavedTemplatesDropdown();
+            }
+        } else {
+            alert("❌ Save Failed: " + (result.error || "Unknown pipeline error."));
+        }
+    } catch (error) {
+        alert("❌ Failed connecting to backend: " + error.message);
+    }
+}
+
+
+    // Fire default updates loop configuration metrics right on initialization hook mount
+    window.onload = () => {
+        renderLiveCanvas();
+        applyVisualCustomizationTheme();
+    };
+</script>
+
+</body>
+</html>
